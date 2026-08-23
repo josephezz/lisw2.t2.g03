@@ -4,7 +4,6 @@ import co.edu.unicauca.lisw2_t02_g03.model.Rol;
 import co.edu.unicauca.lisw2_t02_g03.model.EstadoUsuario;
 
 
-import java.security.Provider.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,14 +39,14 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, usuario.getLogin());
             pstmt.setString(2, usuario.getNombreCompleto());
-            pstmt.setString(3, usuario.getRol().toString());
-            pstmt.setString(4, usuario.getEstado().toString());
+            pstmt.setString(3, usuario.getRol().name());
+            pstmt.setString(4, usuario.getEstado().name());
             pstmt.setString(5, usuario.getContrasena());
             pstmt.executeUpdate();
             //this.disconnect();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsuarioRepository.class.getName()).log(Level.SEVERE, null, ex);
              return false;
         } finally {
             databaseManager.disconnect();
@@ -75,7 +74,7 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
                 usuarios.add(newUsuario);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsuarioRepository.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             databaseManager.disconnect();
         }
@@ -102,7 +101,7 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
                 return usuario;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsuarioRepository.class.getName()).log(Level.SEVERE, null, ex);
         } finally { 
             databaseManager.disconnect();
         }
@@ -117,13 +116,13 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
             databaseManager.connect();
             Connection conn = databaseManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, estado.toString());
+            pstmt.setString(1, estado.name());
             pstmt.setString(2, login);
             int rowsAffected = pstmt.executeUpdate();
             //this.disconnect();
             return rowsAffected > 0; // Retorna true si se actualizó al menos una fila
         } catch (SQLException ex) {
-            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsuarioRepository.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         } finally {
             databaseManager.disconnect();

@@ -27,7 +27,7 @@ public class DataBaseInitializer {
                 """;
 
         try {
-
+        
             databaseManager.connect();
 
             Connection conn = databaseManager.getConnection();
