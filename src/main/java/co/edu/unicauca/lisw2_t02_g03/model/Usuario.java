@@ -1,4 +1,4 @@
-package main.java.co.edu.unicauca.lisw2_t02_g03.model;
+package co.edu.unicauca.lisw2_t02_g03.model;
 
 public class Usuario {
     private String login;
@@ -19,11 +19,11 @@ public class Usuario {
         return login;
     }
 
-    private void setLogin(String login) { 
+    public void setLogin(String login) { 
         this.login = login;
     }
 
-    private void setNombreCompleto(String nombreCompleto) { 
+    public void setNombreCompleto(String nombreCompleto) { 
         this.nombreCompleto = nombreCompleto;
     }
 
@@ -31,7 +31,7 @@ public class Usuario {
         return nombreCompleto;
     }
 
-    private void setRol(Rol rol) { 
+    public void setRol(Rol rol) { 
         this.rol = rol;
     }
 
@@ -39,7 +39,7 @@ public class Usuario {
         return rol;
     }
 
-    private void setEstado(EstadoUsuario estado) { 
+    public void setEstado(EstadoUsuario estado) { 
         this.estado = estado;
     }
 
@@ -47,7 +47,7 @@ public class Usuario {
         return estado;
     }
 
-    private void setContrasena(String contrasena) { 
+    public void setContrasena(String contrasena) { 
         this.contrasena = contrasena;
     }
 
