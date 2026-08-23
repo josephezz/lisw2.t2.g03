@@ -64,9 +64,7 @@ public class Usuario {
                 "login='" + login + '\'' +
                 ", nombreCompleto='" + nombreCompleto + '\'' +
                 ", rol=" + rol +
-                ", estado=" + estado +
-                ", contrasena='" + contrasena + '\'' +
+                ", estado=" + estado + '\'' +
                 '}';
     }
-
 }

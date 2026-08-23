@@ -8,5 +8,5 @@ public interface InterfaceUsuarioRepository {
     boolean save(Usuario usuario);
     List<Usuario> list();
     Usuario findByLogin(String login);
-    boolean update(EstadoUsuario estado, String login);
+    boolean updateEstado(EstadoUsuario estado, String login);
 }

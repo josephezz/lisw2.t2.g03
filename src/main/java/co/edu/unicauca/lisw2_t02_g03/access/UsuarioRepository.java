@@ -40,8 +40,8 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, usuario.getLogin());
             pstmt.setString(2, usuario.getNombreCompleto());
-            pstmt.setObject(3, usuario.getRol());
-            pstmt.setObject(4, usuario.getEstado());
+            pstmt.setString(3, usuario.getRol().toString());
+            pstmt.setString(4, usuario.getEstado().toString());
             pstmt.setString(5, usuario.getContrasena());
             pstmt.executeUpdate();
             //this.disconnect();
@@ -110,14 +110,14 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
     }
 
     @Override
-    public boolean update(EstadoUsuario estado, String login) {
+    public boolean updateEstado(EstadoUsuario estado, String login) {
         // Implementación para actualizar un usuario en la base de datos
         try {
             String sql = "UPDATE Usuario SET Estado = ? WHERE Login = ?";
             databaseManager.connect();
             Connection conn = databaseManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setObject(1, estado);
+            pstmt.setString(1, estado.toString());
             pstmt.setString(2, login);
             int rowsAffected = pstmt.executeUpdate();
             //this.disconnect();
