@@ -1,5 +1,8 @@
 package co.edu.unicauca.lisw2_t02_g03.access;
 import co.edu.unicauca.lisw2_t02_g03.model.Usuario;
+import co.edu.unicauca.lisw2_t02_g03.model.Rol;
+import co.edu.unicauca.lisw2_t02_g03.model.EstadoUsuario;
+
 
 import java.security.Provider.Service;
 import java.sql.Connection;
@@ -14,11 +17,10 @@ import java.sql.Statement;
 
 
 public class UsuarioRepository implements InterfaceUsuarioRepository {
+    private DataBaseManager databaseManager;
 
-     private Connection conn;
-
-    public UsuarioRepository() {
-        initDatabase();
+    public UsuarioRepository(DataBaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 
     @Override
@@ -33,6 +35,8 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
             String sql = "INSERT INTO Usuario ( Login, NombreCompleto, Rol, Estado, Contrasena ) "
                     + "VALUES ( ?, ?, ?, ?, ? )";
 
+            databaseManager.connect();
+            Connection conn = databaseManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, usuario.getLogin());
             pstmt.setString(2, usuario.getNombreCompleto());
@@ -44,8 +48,10 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+             return false;
+        } finally {
+            databaseManager.disconnect();
         }
-        return false;
     }
 
     @Override
@@ -55,23 +61,23 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
         try {
 
             String sql = "SELECT Login, NombreCompleto, Rol, Estado, Contrasena FROM Usuario";
-            //this.connect();
-
+            databaseManager.connect();
+            Connection conn = databaseManager.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Usuario newUsuario = new Usuario( );
+                Usuario newUsuario = new Usuario();
                 newUsuario.setLogin(rs.getString("Login"));
                 newUsuario.setNombreCompleto(rs.getString("NombreCompleto"));
-                newUsuario.setRol((String) rs.getObject("Rol"));
-                newUsuario.setEstado((String) rs.getObject("Estado"));
+                newUsuario.setRol(Rol.valueOf(rs.getString("Rol")));
+                newUsuario.setEstado(EstadoUsuario.valueOf(rs.getString("Estado")));
                 newUsuario.setContrasena(rs.getString("Contrasena"));
                 usuarios.add(newUsuario);
             }
-            //this.disconnect();
-
         } catch (SQLException ex) {
             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            databaseManager.disconnect();
         }
         return usuarios;
     }
@@ -79,13 +85,49 @@ public class UsuarioRepository implements InterfaceUsuarioRepository {
     @Override
     public Usuario findByLogin(String login) {
         // Implementación para buscar un usuario por su login en la base de datos
-        return null; // Retorna el usuario encontrado o null si no existe
+        try {
+            String sql = "SELECT Login, NombreCompleto, Rol, Estado, Contrasena FROM Usuario WHERE Login = ?";
+            databaseManager.connect();
+            Connection conn = databaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, login);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setLogin(rs.getString("Login"));
+                usuario.setNombreCompleto(rs.getString("NombreCompleto"));
+                usuario.setRol(Rol.valueOf(rs.getString("Rol")));
+                usuario.setEstado(EstadoUsuario.valueOf(rs.getString("Estado")));
+                usuario.setContrasena(rs.getString("Contrasena"));
+                return usuario;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+        } finally { 
+            databaseManager.disconnect();
+        }
+        return null; // Retorna null si no se encuentra el usuario  
     }
 
     @Override
-    public boolean update(Usuario usuario) {
+    public boolean update(EstadoUsuario estado, String login) {
         // Implementación para actualizar un usuario en la base de datos
-        return false; // Retorna true si se actualiza correctamente, false en caso contrario
+        try {
+            String sql = "UPDATE Usuario SET Estado = ? WHERE Login = ?";
+            databaseManager.connect();
+            Connection conn = databaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setObject(1, estado);
+            pstmt.setString(2, login);
+            int rowsAffected = pstmt.executeUpdate();
+            //this.disconnect();
+            return rowsAffected > 0; // Retorna true si se actualizó al menos una fila
+        } catch (SQLException ex) {
+            Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            databaseManager.disconnect();
+        }
     }
     
 }
