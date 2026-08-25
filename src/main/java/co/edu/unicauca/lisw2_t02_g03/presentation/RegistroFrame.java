@@ -16,6 +16,7 @@ public class RegistroFrame extends JFrame {
     private JTextField txtLogin;
     private JTextField txtNombre;
     private JComboBox<Rol> comboRol;
+    private JComboBox<EstadoUsuario> comboEstado;
     private JPasswordField txtPassword;
     private JPasswordField txtConfirmPassword;
 
@@ -33,10 +34,12 @@ public class RegistroFrame extends JFrame {
     private void configurarVentana() {
 
         setTitle("Registro de Usuario");
-        setSize(500, 550);
+        setSize(500, 600);
+
         setDefaultCloseOperation(
                 JFrame.DISPOSE_ON_CLOSE
         );
+
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -44,9 +47,7 @@ public class RegistroFrame extends JFrame {
     private void crearInterfaz() {
 
         JPanel panelPrincipal =
-                new JPanel(
-                        new BorderLayout(10, 10)
-                );
+                new JPanel(new BorderLayout(10, 10));
 
         panelPrincipal.setBorder(
                 BorderFactory.createEmptyBorder(
@@ -54,9 +55,9 @@ public class RegistroFrame extends JFrame {
                 )
         );
 
-        // ==============================
+        // ==========================================
         // TITULO
-        // ==============================
+        // ==========================================
 
         JLabel titulo =
                 new JLabel(
@@ -77,38 +78,39 @@ public class RegistroFrame extends JFrame {
                 BorderLayout.NORTH
         );
 
-        // ==============================
+        // ==========================================
         // FORMULARIO
-        // ==============================
+        // ==========================================
 
         JPanel formulario =
                 new JPanel(
                         new GridLayout(
-                                10,
+                                12,
                                 1,
                                 5,
                                 5
                         )
                 );
 
+        // Login
         formulario.add(
                 new JLabel("Login:")
         );
 
-        txtLogin =
-                new JTextField();
+        txtLogin = new JTextField();
 
         formulario.add(txtLogin);
 
+        // Nombre
         formulario.add(
                 new JLabel("Nombre completo:")
         );
 
-        txtNombre =
-                new JTextField();
+        txtNombre = new JTextField();
 
         formulario.add(txtNombre);
 
+        // Rol
         formulario.add(
                 new JLabel("Rol:")
         );
@@ -120,6 +122,25 @@ public class RegistroFrame extends JFrame {
 
         formulario.add(comboRol);
 
+        // Estado
+        formulario.add(
+                new JLabel("Estado:")
+        );
+
+        comboEstado =
+                new JComboBox<>(
+                        EstadoUsuario.values()
+                );
+
+        // Por seguridad/usabilidad, dejamos ACTIVO
+        // como opción inicial.
+        comboEstado.setSelectedItem(
+                EstadoUsuario.ACTIVO
+        );
+
+        formulario.add(comboEstado);
+
+        // Contraseña
         formulario.add(
                 new JLabel("Contraseña:")
         );
@@ -129,6 +150,7 @@ public class RegistroFrame extends JFrame {
 
         formulario.add(txtPassword);
 
+        // Confirmar contraseña
         formulario.add(
                 new JLabel("Confirmar contraseña:")
         );
@@ -143,9 +165,9 @@ public class RegistroFrame extends JFrame {
                 BorderLayout.CENTER
         );
 
-        // ==============================
+        // ==========================================
         // BOTONES
-        // ==============================
+        // ==========================================
 
         JButton btnRegistrar =
                 new JButton("Registrar");
@@ -171,9 +193,9 @@ public class RegistroFrame extends JFrame {
                 BorderLayout.SOUTH
         );
 
-        // ==============================
+        // ==========================================
         // EVENTOS
-        // ==============================
+        // ==========================================
 
         btnRegistrar.addActionListener(
                 e -> registrarUsuario()
@@ -197,6 +219,9 @@ public class RegistroFrame extends JFrame {
         Rol rol =
                 (Rol) comboRol.getSelectedItem();
 
+        EstadoUsuario estado =
+                (EstadoUsuario) comboEstado.getSelectedItem();
+
         String password =
                 new String(
                         txtPassword.getPassword()
@@ -207,9 +232,9 @@ public class RegistroFrame extends JFrame {
                         txtConfirmPassword.getPassword()
                 );
 
-        // ==============================
+        // ==========================================
         // VALIDACIONES BASICAS
-        // ==============================
+        // ==========================================
 
         if (
                 login.isBlank()
@@ -240,16 +265,16 @@ public class RegistroFrame extends JFrame {
             return;
         }
 
-        // ==============================
+        // ==========================================
         // CREAR USUARIO
-        // ==============================
+        // ==========================================
 
         Usuario usuario =
                 new Usuario(
                         login,
                         nombre,
                         rol,
-                        EstadoUsuario.ACTIVO,
+                        estado,
                         password
                 );
 
@@ -276,7 +301,8 @@ public class RegistroFrame extends JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "No fue posible registrar el usuario.\n"
-                            + "Verifique los datos ingresados.",
+                            + "El login puede existir o "
+                            + "los datos pueden ser inválidos.",
                     "Error de registro",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -287,10 +313,15 @@ public class RegistroFrame extends JFrame {
 
         txtLogin.setText("");
         txtNombre.setText("");
-        txtPassword.setText("");
-        txtConfirmPassword.setText("");
 
         comboRol.setSelectedIndex(0);
+
+        comboEstado.setSelectedItem(
+                EstadoUsuario.ACTIVO
+        );
+
+        txtPassword.setText("");
+        txtConfirmPassword.setText("");
     }
 
     private void volver() {
