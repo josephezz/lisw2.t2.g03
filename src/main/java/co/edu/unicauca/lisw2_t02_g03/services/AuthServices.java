@@ -6,15 +6,7 @@ import co.edu.unicauca.lisw2_t02_g03.model.Usuario;
 
 import java.util.function.BiPredicate;
 
-/**
- * Servicio encargado de la autenticación de usuarios.
- *
- * Aplica:
- * - SRP: su única responsabilidad es gestionar la autenticación.
- * - DIP: depende de InterfaceUsuarioRepository.
- * - OCP: la estrategia de verificación de contraseña
- *        puede ser reemplazada sin modificar esta clase.
- */
+
 public class AuthServices {
 
     private final InterfaceUsuarioRepository usuarioRepository;

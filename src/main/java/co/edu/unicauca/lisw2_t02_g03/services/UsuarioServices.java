@@ -8,16 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * Servicio encargado de gestionar las operaciones de negocio
- * relacionadas con los usuarios.
- *
- * Aplica:
- * - SRP: se encarga únicamente de la lógica de negocio de usuarios.
- * - DIP: depende de InterfaceUsuarioRepository y no de UsuarioRepository.
- * - OCP: las estrategias de validación y hash pueden cambiar
- *        sin modificar esta clase.
- */
+
 public class UsuarioServices {
 
     private final InterfaceUsuarioRepository usuarioRepository;
@@ -135,9 +126,7 @@ public class UsuarioServices {
         );
     }
 
-    /**
-     * Valida los datos básicos necesarios para crear un usuario.
-     */
+  
     private boolean datosUsuarioValidos(Usuario usuario) {
 
         if (usuario == null) {
